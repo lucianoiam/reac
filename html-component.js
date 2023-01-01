@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+(() => {
+
 class HTMLComponent extends React.Component {
 
     constructor(props, childComponents) {
@@ -40,3 +42,5 @@ class HTMLComponent extends React.Component {
 
 window.ReactNoJSX = window.ReactNoJSX || {};
 window.ReactNoJSX.HTMLComponent = HTMLComponent;
+
+})();

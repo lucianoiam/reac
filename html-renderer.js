@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+(() => {
+
 class HTMLRenderer {
 
     constructor(options) {
@@ -113,3 +115,5 @@ HTMLRenderer.attributePropMap = {
 
 window.ReactNoJSX = window.ReactNoJSX || {};
 window.ReactNoJSX.HTMLRenderer = HTMLRenderer;
+
+})();
