@@ -12,8 +12,8 @@ What is included
 
 | File | Contents
 |------|---------
-| [html-renderer.js](https://github.com/lucianoiam/react-nojsx/blob/master/html-renderer.js) | Class for converting HTML text into a `React.Element` tree
-| [html-component.js](https://github.com/lucianoiam/react-nojsx/blob/master/html-component.js) | Optional `React.Component` subclass for convenience
+| [renderer.js](https://github.com/lucianoiam/react-nojsx/blob/master/renderer.js) | Class for converting HTML text into a `React.Element` tree
+| [component.js](https://github.com/lucianoiam/react-nojsx/blob/master/component.js) | Optional `React.Component` subclass for convenience
 
 Markup syntax
 -------------

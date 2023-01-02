@@ -18,7 +18,7 @@
 
 (() => {
 
-class HTMLRenderer {
+class Renderer {
 
     constructor(options) {
         if (!options || !options.react) {
@@ -108,13 +108,13 @@ class HTMLRenderer {
 }
 
 // TODO : this is very incomplete
-HTMLRenderer.attributePropMap = {
+Renderer.attributePropMap = {
     'onchange' : 'onChange',
     'onclick'  : 'onClick',
     'oninput'  : 'onInput',
 };
 
 window.ReactNoJSX = window.ReactNoJSX || {};
-window.ReactNoJSX.HTMLRenderer = HTMLRenderer;
+window.ReactNoJSX.Renderer = Renderer;
 
 })();

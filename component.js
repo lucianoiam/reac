@@ -18,12 +18,12 @@
 
 (() => {
 
-class HTMLComponent extends React.Component {
+class Component extends React.Component {
 
     constructor(props, childComponents) {
         super(props);
 
-        this._renderer = new ReactNoJSX.HTMLRenderer({
+        this._renderer = new ReactNoJSX.Renderer({
             react: React,
             childComponents: childComponents,
             callContext: this
@@ -41,6 +41,6 @@ class HTMLComponent extends React.Component {
 }
 
 window.ReactNoJSX = window.ReactNoJSX || {};
-window.ReactNoJSX.HTMLComponent = HTMLComponent;
+window.ReactNoJSX.Component = Component;
 
 })();

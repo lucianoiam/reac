@@ -9,19 +9,19 @@
     <div id="root"></div>
 
     <!-- Load React or Preact -->
-    <!--<script src="https://unpkg.com/react/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>-->
-    <script src="https://cdn.jsdelivr.net/npm/preact/dist/preact.min.js"></script>
+    <script src="https://unpkg.com/react/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/preact/dist/preact.min.js"></script>-->
 
-    <!-- Allow to switch between libraries without modifying html-component.js -->
+    <!-- Allow to switch between libraries without modifying component.js -->
     <script>window.React = window.React || window.preact;</script>
 
-    <script src="html-renderer.js"></script>
-    <script src="html-component.js"></script>
+    <script src="renderer.js"></script>
+    <script src="component.js"></script>
 
     <script>
 
-    class ChildComponent extends ReactNoJSX.HTMLComponent {
+    class ChildComponent extends ReactNoJSX.Component {
 
         renderHTML() {
             return `<div>Count: ${this.props.count}</div>`;
@@ -29,7 +29,7 @@
 
     }
 
-    class ParentComponent extends ReactNoJSX.HTMLComponent {
+    class ParentComponent extends ReactNoJSX.Component {
 
         constructor(props) {
             super(props, { ChildComponent });
