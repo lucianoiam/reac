@@ -20,10 +20,10 @@ Markup syntax
 
 ```js
 const html = `<div>
-                 <button onclick={function}>
+                 <button onClick="{function}">
                     ${string}
                  </button>
-                 <ChildComponent someProp={anything}></ChildComponent>
+                 <ChildComponent someProp="{anything}"></ChildComponent>
               </div>`;
 ```
 

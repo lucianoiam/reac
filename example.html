@@ -34,20 +34,25 @@
         constructor(props) {
             super(props, { ChildComponent });
             
-            this.state = { count : 0 };
+            this.state = { count : 0, text: '' };
         }
 
         renderHTML() {
             return `<div>
-                        <button onClick="{this.incrementCount}">
-                            Click me
-                        </button>
+                        <button onClick="{this.incrementCount}">Click me</button>
                         <ChildComponent count="${this.state.count}"></ChildComponent>
+                    </div>
+                    <hr>
+                    <div>
+                        <textarea
+                            placeholder="Type something"
+                            onInput="{ ev => this.setState(p => ({ text: ev.target.value, count: p.count })) }"></textarea>
+                        <div>${this.state.text}</div>
                     </div>`;
         }
 
         incrementCount() {
-            this.setState(prevState => ({ count: prevState.count + 1 }));
+            this.setState(prevState => ({ count: prevState.count + 1, text: prevState.text }));
         }
 
     }
