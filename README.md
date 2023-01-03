@@ -23,7 +23,7 @@ const html = `
     <div>
         
         <do if="true|false">
-        <div>Conditional children</div>
+        <div>Conditional child</div>
         </do>
 
         <ul>
@@ -42,15 +42,21 @@ const html = `
 `;
 ```
 
-- Expressions placed between curly braces are evaluated during parsing and
-the result values are used for setting prop values
+- A single, enclosing, top level HTML element is optional.
+
+- The `<do>` element is reserved for statements
+
+- `<do>` statement elements can contain multiple children
+
+- Expressions placed between curly braces in element attribute values are
+evaluated during parsing, and their result values are used for setting prop
+values.
 
 - When the value of `iter` enclosed between curly braces is found within the
-text content or attribute value of any `<do>` loop element descendant, it first
-gets replaced by the iteration number.
-
-- The default arguments for loops are `from="0"`, `step="1"` and `iter="i"`. The
-latter makes the iteration number available in token `{i}` by default.
+text content or attribute value of any `<do>` loop element descendant, it gets
+replaced by the iteration number. The default arguments for loops are
+`from="0"`, `step="1"` and `iter="i"`. The latter makes the iteration number
+available in token `{i}` by default.
 
 - Custom component tags are supported by including a map of tag names to
 component classes in the renderer options object

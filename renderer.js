@@ -67,7 +67,9 @@ class Renderer {
                 if (children.length > 0) {
                     reactElement = react.createElement(element.tagName, props, children);
                 } else {
-                    props.dangerouslySetInnerHTML = { __html: this._replaceIfNeeded(element.innerHTML) };
+                    props.dangerouslySetInnerHTML = {
+                        __html: this._replaceTokenIfNeeded(element.innerHTML)
+                    };
                     reactElement = react.createElement(element.tagName, props);
                 }
             }
@@ -90,16 +92,18 @@ class Renderer {
         } else if (! isNaN(attributes.to)) {
             const to = parseFloat(attributes.to),
                   from = parseFloat(attributes.from || '0'),
-                  step = parseFloat(attributes.step || '1'),
-                  iter = attributes.iter || 'i';
+                  step = parseFloat(attributes.step || '1');
+
+            this._replacement.token = '{' + (attributes.iter || 'i') + '}';
 
             let reactElements = [];
 
             for (let i = from; i < to; i += step) {
-                this._replacement = { token: `{${iter}}`, value: String(i) };
+                this._replacement.value = String(i);
                 reactElements = reactElements.concat(this._renderHTMLCollection(element.children));
-                this._replacement = {};
             }
+
+            this._replacement = {};
 
             return reactElements;
         } else {
@@ -115,7 +119,7 @@ class Renderer {
             const lowerCaseName = attribute.nodeName.toLowerCase(),
                   name = lowerCaseName in This.attributePropMap ? This.attributePropMap[lowerCaseName]
                             : attribute.nodeName,
-                  value = this._replaceIfNeeded(attribute.nodeValue);
+                  value = this._replaceTokenIfNeeded(attribute.nodeValue);
 
             if (name == 'style') {
                 props.style = {};
@@ -143,7 +147,7 @@ class Renderer {
         return props;
     }
 
-    _replaceIfNeeded(s) {
+    _replaceTokenIfNeeded(s) {
         return this._replacement ? s.replace(this._replacement.token, this._replacement.value) : s;
     }
 
