@@ -25,7 +25,14 @@
 
         renderHTML() {
             return `
-                <div>Count: ${this.props.count}</div>
+                <do if="${this.props.count > 0}">
+                <h4>Items</h4>
+                </do>
+                <ul>
+                    <do from="0" to="${this.props.count}" step="1" iter="i">
+                    <li data-index="{i}">Item {i}</li>
+                    </do>
+                </ul>
             `;
         }
 
@@ -41,15 +48,14 @@
         renderHTML() {
             return `
                 <div>
-                    <button onClick="{this.incrementCount}">Click me</button>
-                    <ChildComponent count="${this.state.count}"></ChildComponent>
-                </div>
-                <hr>
-                <div>
                     <textarea
                         placeholder="Type something"
                         onInput="{ ev => this.setState(ps => ({ ...ps, text: ev.target.value })) }"></textarea>
-                    <div>${this.state.text}</div>
+                    <span>${this.state.text}</span>
+                </div>
+                <div>
+                    <button onClick="{this.incrementCount}">Click to add item</button>
+                    <ChildComponent count="${this.state.count}"></ChildComponent>
                 </div>
             `;
         }

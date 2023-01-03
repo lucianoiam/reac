@@ -21,16 +21,36 @@ Markup syntax
 ```js
 const html = `
     <div>
-        <button onClick="{function}">
-            ${string}
-        </button>
-        <ChildComponent someProp="{anything}"></ChildComponent>
+        
+        <do if="true|false">
+        <div>Conditional children</div>
+        </do>
+
+        <ul>
+        <do from="0" to="10" step="1" iter="index">
+            <li>Current iteration is {index}</li>
+        </do>
+        </ul>
+        
+        <button onClick="{function}"></button>
+
+        <ChildComponent someProp="{expression}"></ChildComponent>
+
+        ${string}
+
     </div>
 `;
 ```
 
 - Expressions placed between curly braces are evaluated during parsing and
-the result values used for setting the prop values
+the result values are used for setting prop values
+
+- When the value of `iter` enclosed between curly braces is found within the
+text content or attribute value of any `<do>` loop element descendant, it first
+gets replaced by the iteration number.
+
+- The default arguments for loops are `from="0"`, `step="1"` and `iter="i"`. The
+latter makes the iteration number available in token `{i}` by default.
 
 - Custom component tags are supported by including a map of tag names to
 component classes in the renderer options object
@@ -39,7 +59,7 @@ component classes in the renderer options object
 for inserting dynamic data.
 
 See [example.html](https://github.com/lucianoiam/react-nojsx/blob/master/example.html)
-for a complete example.
+for more details
 
 Credits
 -------

@@ -31,6 +31,8 @@ class Renderer {
         this._options.childComponents = options.childComponents ?
              Object.fromEntries(Object.entries(options.childComponents)
                 .map(([k, v]) => [k.toUpperCase(), v])) : {};
+
+        this._replacement = {};
     }
 
     render(html) {
@@ -49,25 +51,60 @@ class Renderer {
     }
 
     _renderHTMLElement(element) {
-        const react = this._options.react,
-              components = this._options.childComponents,
-              props = this._renderHTMLElementProps(element),
-              children = this._renderHTMLCollection(element.children);
-
         let reactElement;
 
-        if (element.tagName in components) {
-            reactElement = react.createElement(components[element.tagName], props, children);
+        if (element.tagName == 'DO') {
+            return this._renderHTMLElementWithStatement(element);
         } else {
-            if (children.length > 0) {
-                reactElement = react.createElement(element.tagName, props, children);
+            const react = this._options.react,
+                  components = this._options.childComponents,
+                  props = this._renderHTMLElementProps(element),
+                  children = this._renderHTMLCollection(element.children);
+
+            if (element.tagName in components) {
+                reactElement = react.createElement(components[element.tagName], props, children);
             } else {
-                props.dangerouslySetInnerHTML = { __html: element.innerHTML };
-                reactElement = react.createElement(element.tagName, props);
+                if (children.length > 0) {
+                    reactElement = react.createElement(element.tagName, props, children);
+                } else {
+                    props.dangerouslySetInnerHTML = { __html: this._replaceIfNeeded(element.innerHTML) };
+                    reactElement = react.createElement(element.tagName, props);
+                }
             }
         }
 
         return reactElement;
+    }
+
+    _renderHTMLElementWithStatement(element) {
+        let attributes = {};
+
+        for (const attribute of element.attributes) {
+            attributes[attribute.nodeName] = attribute.nodeValue;
+        }
+
+        if (attributes.if == 'false') {
+            return null;
+        } if (attributes.if == 'true') {
+            return this._renderHTMLCollection(element.children);
+        } else if (! isNaN(attributes.to)) {
+            const to = parseFloat(attributes.to),
+                  from = parseFloat(attributes.from || '0'),
+                  step = parseFloat(attributes.step || '1'),
+                  iter = attributes.iter || 'i';
+
+            let reactElements = [];
+
+            for (let i = from; i < to; i += step) {
+                this._replacement = { token: `{${iter}}`, value: String(i) };
+                reactElements = reactElements.concat(this._renderHTMLCollection(element.children));
+                this._replacement = {};
+            }
+
+            return reactElements;
+        } else {
+            throw new Error('Malformed statement ' + element.cloneNode(false).outerHTML);
+        }
     }
 
     _renderHTMLElementProps(element) {
@@ -78,7 +115,7 @@ class Renderer {
             const lowerCaseName = attribute.nodeName.toLowerCase(),
                   name = lowerCaseName in This.attributePropMap ? This.attributePropMap[lowerCaseName]
                             : attribute.nodeName,
-                  value = attribute.nodeValue;
+                  value = this._replaceIfNeeded(attribute.nodeValue);
 
             if (name == 'style') {
                 props.style = {};
@@ -89,7 +126,7 @@ class Renderer {
                 }
             } else {
                 if (value.startsWith('{') && value.endsWith('}')) {
-                    const js = 'return ' + value.substring(1, value.length - 1),
+                    const js = 'return (' + value.substring(1, value.length - 1) + ')',
                           propVal = Function(js).bind(this._options.callContext).call();
 
                     if (typeof(propVal) === 'function') {
@@ -105,6 +142,11 @@ class Renderer {
 
         return props;
     }
+
+    _replaceIfNeeded(s) {
+        return this._replacement ? s.replace(this._replacement.token, this._replacement.value) : s;
+    }
+
 }
 
 // TODO : this is very incomplete
