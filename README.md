@@ -19,12 +19,14 @@ Markup syntax
 -------------
 
 ```js
-const html = `<div>
-                 <button onClick="{function}">
-                    ${string}
-                 </button>
-                 <ChildComponent someProp="{anything}"></ChildComponent>
-              </div>`;
+const html = `
+    <div>
+        <button onClick="{function}">
+            ${string}
+        </button>
+        <ChildComponent someProp="{anything}"></ChildComponent>
+    </div>
+`;
 ```
 
 - Expressions placed between curly braces are evaluated during parsing and
