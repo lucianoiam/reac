@@ -42,11 +42,11 @@ const html = `
 `;
 ```
 
-- A single, enclosing, top level HTML element is optional.
+- The parser input is valid HTML text, no special tokens needed. Template
+literals are enough for interleaving dynamic data.
 
-- The `<do>` element is reserved for statements
-
-- `<do>` statement elements can contain multiple children
+- Only the `<do>` element has a special meaning and is reserved for statements.
+These statement elements can contain multiple children.
 
 - Expressions placed between curly braces in element attribute values are
 evaluated during parsing, and their result values are used for setting prop
@@ -61,8 +61,7 @@ available in token `{i}` by default.
 - Custom component tags are supported by including a map of tag names to
 component classes in the renderer options object
 
-- Since the parser accepts HTML strings as input, template literals are enough
-for inserting dynamic data.
+- A single, top level, enclosing HTML element is optional.
 
 See [example.html](https://github.com/lucianoiam/react-nojsx/blob/master/example.html)
 for more details

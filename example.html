@@ -26,10 +26,10 @@
         renderHTML() {
             return `
                 <do if="${this.props.count > 0}">
-                <h4>Items</h4>
+                <h3>Items</h3>
                 </do>
                 <ul>
-                    <do from="0" to="${this.props.count}" step="1" iter="i">
+                    <do from="0" to="${this.props.count}">
                     <li data-index="{i}">Item {i}</li>
                     </do>
                 </ul>
