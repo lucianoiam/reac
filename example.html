@@ -29,14 +29,17 @@
                 <h3>Items</h3>
                 </do>
                 <ul>
-                    <do from="0" to="${this.props.count}">
-                    <li data-index="{i}">Item {i}</li>
+                    <do on="{ChildComponent.fruits}" to="${this.props.count}">
+                    <li data-index="{i}">Item {i} - {val}</li>
                     </do>
                 </ul>
             `;
         }
 
     }
+            
+    ChildComponent.fruits = ['apple', 'orange', 'banana', 'mango', 'kiwi'];
+
 
     class ParentComponent extends ReactNoJSX.Component {
 

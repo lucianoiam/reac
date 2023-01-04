@@ -27,16 +27,16 @@ const html = `
         </do>
 
         <ul>
-        <do from="0" to="10" step="1" iter="index">
-            <li>Current iteration is {index}</li>
+        <do from="0" to="10" on="{expression}" index="i" value="val">
+            <li>The value at index {i} is {val}</li>
         </do>
         </ul>
         
-        <button onClick="{function}"></button>
+        <button onClick="{expression}"></button>
 
         <ChildComponent someProp="{expression}"></ChildComponent>
 
-        ${string}
+        ${expression}
 
     </div>
 `;
@@ -45,18 +45,13 @@ const html = `
 - The parser input is valid HTML text, no special tokens needed. Template
 literals are enough for interleaving dynamic data.
 
-- Only the `<do>` element has a special meaning and is reserved for statements.
-These statement elements can contain multiple children.
+- Only the `<do>` element has a special meaning, it is reserved for conditional
+and loop statements. These statement elements can contain multiple children.
 
 - Expressions placed between curly braces in element attribute values are
 evaluated during parsing, and their result values are used for setting prop
-values.
-
-- When the value of `iter` enclosed between curly braces is found within the
-text content or attribute value of any `<do>` loop element descendant, it gets
-replaced by the iteration number. The default arguments for loops are
-`from="0"`, `step="1"` and `iter="i"`. The latter makes the iteration number
-available in token `{i}` by default.
+values. Or in the case of the `<do>` loop `on` attribute, for optionally setting
+a source array for the values.
 
 - Custom component tags are supported by including a map of tag names to
 component classes in the renderer options object

@@ -32,7 +32,7 @@ class Renderer {
              Object.fromEntries(Object.entries(options.childComponents)
                 .map(([k, v]) => [k.toUpperCase(), v])) : {};
 
-        this._replacement = {};
+        this._tokens = {};
     }
 
     render(html) {
@@ -41,114 +41,128 @@ class Renderer {
     }
 
     _renderHTMLCollection(collection) {
-        const reactElements = [];
+        const rels = [];
 
-        for (const element of collection) {
-            reactElements.push(this._renderHTMLElement(element));
+        for (const el of collection) {
+            rels.push(this._renderHTMLElement(el));
         }
 
-        return reactElements;
+        return rels;
     }
 
-    _renderHTMLElement(element) {
-        let reactElement;
+    _renderHTMLElement(el) {
+        let rel;
 
-        if (element.tagName == 'DO') {
-            return this._renderHTMLElementWithStatement(element);
+        if (el.tagName == 'DO') {
+            return this._renderHTMLElementWithStatement(el);
         } else {
             const react = this._options.react,
                   components = this._options.childComponents,
-                  props = this._renderHTMLElementProps(element),
-                  children = this._renderHTMLCollection(element.children);
+                  props = this._renderHTMLElementProps(el),
+                  children = this._renderHTMLCollection(el.children);
 
-            if (element.tagName in components) {
-                reactElement = react.createElement(components[element.tagName], props, children);
+            if (el.tagName in components) {
+                rel = react.createElement(components[el.tagName], props, children);
             } else {
                 if (children.length > 0) {
-                    reactElement = react.createElement(element.tagName, props, children);
+                    rel = react.createElement(el.tagName, props, children);
                 } else {
                     props.dangerouslySetInnerHTML = {
-                        __html: this._replaceTokenIfNeeded(element.innerHTML)
+                        __html: this._replaceTokens(el.innerHTML)
                     };
-                    reactElement = react.createElement(element.tagName, props);
+                    rel = react.createElement(el.tagName, props);
                 }
             }
         }
 
-        return reactElement;
+        return rel;
     }
 
-    _renderHTMLElementWithStatement(element) {
-        let attributes = {};
+    _renderHTMLElementWithStatement(el) {
+        let attrs = {};
 
-        for (const attribute of element.attributes) {
-            attributes[attribute.nodeName] = attribute.nodeValue;
+        for (const attr of el.attributes) {
+            attrs[attr.nodeName] = attr.nodeValue;
         }
 
-        if (attributes.if == 'false') {
+        if (attrs.if == 'false') {
             return null;
-        } if (attributes.if == 'true') {
-            return this._renderHTMLCollection(element.children);
-        } else if (! isNaN(attributes.to)) {
-            const to = parseFloat(attributes.to),
-                  from = parseFloat(attributes.from || '0'),
-                  step = parseFloat(attributes.step || '1');
+        } if (attrs.if == 'true') {
+            return this._renderHTMLCollection(el.children);
+        } else if (! isNaN(attrs.to)) {
+            const to = parseFloat(attrs.to),
+                  from = parseFloat(attrs.from || '0'),
+                  index = attrs.index || 'i',
+                  value = attrs.value || 'val',
+                  on = this._evaluate(attrs.on, null);
 
-            this._replacement.token = '{' + (attributes.iter || 'i') + '}';
+            let rels = [];
+            this._tokens = {};
 
-            let reactElements = [];
+            for (let i = from; i < to; i++) {
+                this._tokens[index] = String(i);
 
-            for (let i = from; i < to; i += step) {
-                this._replacement.value = String(i);
-                reactElements = reactElements.concat(this._renderHTMLCollection(element.children));
+                if (on) {
+                    this._tokens[value] = on[i];
+                }
+
+                rels = rels.concat(this._renderHTMLCollection(el.children));
             }
 
-            this._replacement = {};
-
-            return reactElements;
+            return rels;
         } else {
-            throw new Error('Malformed statement ' + element.cloneNode(false).outerHTML);
+            throw new Error('Malformed statement ' + el.cloneNode(false).outerHTML);
         }
     }
 
-    _renderHTMLElementProps(element) {
+    _renderHTMLElementProps(el) {
         const This = this.constructor,
               props = {};
 
-        for (const attribute of element.attributes) {
-            const lowerCaseName = attribute.nodeName.toLowerCase(),
-                  name = lowerCaseName in This.attributePropMap ? This.attributePropMap[lowerCaseName]
-                            : attribute.nodeName,
-                  value = this._replaceTokenIfNeeded(attribute.nodeValue);
+        for (const attr of el.attributes) {
+            const lowerCaseName = attr.nodeName.toLowerCase(),
+                  name = lowerCaseName in This.attributePropMap ?
+                            This.attributePropMap[lowerCaseName] : attr.nodeName,
+                  value = this._replaceTokens(attr.nodeValue);
 
             if (name == 'style') {
                 props.style = {};
 
-                for (let i = 0; i < element.style.length; i++) {
-                    const item = element.style.item(i);
-                    props.style[item] = element.style[item];
+                for (let i = 0; i < el.style.length; i++) {
+                    const item = el.style.item(i);
+                    props.style[item] = el.style[item];
                 }
             } else {
-                if (value.startsWith('{') && value.endsWith('}')) {
-                    const js = 'return (' + value.substring(1, value.length - 1) + ')',
-                          propVal = Function(js).bind(this._options.callContext).call();
-
-                    if (typeof(propVal) === 'function') {
-                        props[name] = propVal.bind(this._options.callContext);
-                    } else {
-                        props[name] = propVal;
-                    }
-                } else {
-                    props[name] = value;
-                }
+                props[name] = this._evaluate(value, value);
             }
         }
 
         return props;
     }
 
-    _replaceTokenIfNeeded(s) {
-        return this._replacement ? s.replace(this._replacement.token, this._replacement.value) : s;
+    _evaluate(exp, def) {
+        if (exp && exp.startsWith('{') && exp.endsWith('}')) {
+            const js = 'return (' + exp.substring(1, exp.length - 1) + ')',
+                  val = Function(js).bind(this._options.callContext).call();
+
+            return typeof(val) === 'function' ?
+                                    val.bind(this._options.callContext)
+                                    : val;
+        }
+
+        return def;
+    }
+
+    _replaceTokens(s) {
+        if (! this._tokens) {
+            return s;
+        }
+
+        for (const [token, value] of Object.entries(this._tokens)) {
+            s = s.replace('{' + token + '}', value);
+        }
+
+        return s;
     }
 
 }
