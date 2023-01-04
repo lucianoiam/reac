@@ -64,8 +64,8 @@ provides values during iteration. The current index and value can be accessed
 from any text content or attribute value in any descendant of `<do>`, via tokens
 with names defined in `index` and `value`. The default tokens are `{i}` and
 `{val}` respectively. The default starting index (`from`) is 0. If `on` is
-specified and `to` is not specified, the last index is the array length. If `to`
-is specified and `on` is not specified, only indexes are available.
+specified and `to` is not specified, the last index is the array length-1. If
+`to` is specified and `on` is not specified, only indexes are available.
 
 - A conditional statement is defined by a `<do>` element with attribute `if`,
 and the only possible values are the strings `true` and `false`.
