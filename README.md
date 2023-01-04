@@ -32,7 +32,7 @@ const reactElements = new Reactant.Renderer({
         </do>
 
         <ul>
-        <do from="0" to="10" on="{expression}" index="i" value="val">
+        <do iterate="{expression}" from="0" to="10" index="i" value="val">
             <li>The value at index {i} is {val}</li>
         </do>
         </ul>
@@ -57,15 +57,16 @@ and loop statements. These statement elements can contain multiple children.
 evaluated during parsing, and their result values are used for setting prop
 values.
 
-- A loop statement is defined by a `<do>` element with attribute `on` or `to`,
-or both. The attributes `from`, `index` and `value` are optional. The return
-value of the expression in the optional `on` attribute must be the array that
-provides values during iteration. The current index and value can be accessed
-from any text content or attribute value in any descendant of `<do>`, via tokens
-with names defined in `index` and `value`. The default tokens are `{i}` and
-`{val}` respectively. The default starting index (`from`) is 0. If `on` is
-specified and `to` is not specified, the last index is the array length-1. If
-`to` is specified and `on` is not specified, only indexes are available.
+- A loop statement is defined by a `<do>` element with attribute `iterate` or
+`to`, or both. The attributes `from`, `index` and `value` are optional. The
+return value of the expression in the optional `iterate` attribute must be the
+array that provides values during iteration. The current index and value can be
+accessed from any text content or attribute value in any descendant of `<do>`,
+via tokens with names defined in `index` and `value`. The default tokens are
+`{i}` and `{val}` respectively. The default starting index (`from`) is 0. If
+`iterate` is specified and `to` is not specified, the last index is array
+length-1. If `to` is specified and `iterate` is not specified, only indexes are
+available.
 
 - A conditional statement is defined by a `<do>` element with attribute `if`,
 and the only possible values are the strings `true` and `false`.

@@ -96,10 +96,10 @@ class Renderer {
         } else if (attrs.if == 'true') {
             return this._renderHTMLCollection(el.children);
 
-        } else if (attrs.on || attrs.to) {
-            const on = this._evaluate(attrs.on, null),
+        } else if (attrs.iterate || attrs.to) {
+            const iterate = this._evaluate(attrs.iterate, null),
                   to = (attrs.to && !isNaN(attrs.to)) ? parseFloat(attrs.to)
-                                                        : on.length,
+                                                        : iterate.length,
                   from = parseFloat(attrs.from || '0'),
                   index = attrs.index || 'i',
                   value = attrs.value || 'val';
@@ -110,8 +110,8 @@ class Renderer {
             for (let i = from; i < to; i++) {
                 this._tokens[index] = String(i);
 
-                if (on) {
-                    this._tokens[value] = on[i];
+                if (iterate) {
+                    this._tokens[value] = iterate[i];
                 }
 
                 rels = rels.concat(this._renderHTMLCollection(el.children));

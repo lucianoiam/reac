@@ -29,7 +29,7 @@
                 <h3>Items</h3>
                 </do>
                 <ul>
-                    <do on="{ChildComponent.fruits}" to="${this.props.count}">
+                    <do iterate="{ChildComponent.fruits}" to="${this.props.count}">
                     <li data-index="{i}">Item {i} - {val}</li>
                     </do>
                 </ul>
