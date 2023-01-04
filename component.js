@@ -24,7 +24,6 @@ class Component extends React.Component {
         super(props);
 
         this._renderer = new ReactNoJSX.Renderer({
-            react: React,
             childComponents: childComponents,
             callContext: this
         });
