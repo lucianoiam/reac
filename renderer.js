@@ -40,6 +40,7 @@ class Renderer {
         }
 
         const doc = (new DOMParser).parseFromString(html, 'text/html');
+
         return this._renderHTMLCollection(doc.body.children); 
     }
 
@@ -73,6 +74,7 @@ class Renderer {
                     props.dangerouslySetInnerHTML = {
                         __html: this._replaceTokens(el.innerHTML)
                     };
+
                     rel = react.createElement(el.tagName, props);
                 }
             }
@@ -90,8 +92,10 @@ class Renderer {
 
         if (attrs.if == 'false') {
             return null;
-        } if (attrs.if == 'true') {
+
+        } else if (attrs.if == 'true') {
             return this._renderHTMLCollection(el.children);
+
         } else if (! isNaN(attrs.to)) {
             const to = parseFloat(attrs.to),
                   from = parseFloat(attrs.from || '0'),
@@ -113,19 +117,20 @@ class Renderer {
             }
 
             return rels;
+            
         } else {
             throw new Error('Malformed statement ' + el.cloneNode(false).outerHTML);
         }
     }
 
     _renderHTMLElementProps(el) {
-        const This = this.constructor,
+        const attrToProp = this.constructor.attributeToPropMap,
               props = {};
 
         for (const attr of el.attributes) {
-            const lowerCaseName = attr.nodeName.toLowerCase(),
-                  name = lowerCaseName in This.attributePropMap ?
-                            This.attributePropMap[lowerCaseName] : attr.nodeName,
+            const locaseName = attr.nodeName.toLowerCase(),
+                  name = locaseName in attrToProp ? attrToProp[locaseName]
+                                                    : attr.nodeName,
                   value = this._replaceTokens(attr.nodeValue);
 
             if (name == 'style') {
@@ -171,7 +176,7 @@ class Renderer {
 }
 
 // TODO : this is very incomplete
-Renderer.attributePropMap = {
+Renderer.attributeToPropMap = {
     'onchange' : 'onChange',
     'onclick'  : 'onClick',
     'oninput'  : 'onInput',

@@ -55,13 +55,13 @@ and loop statements. These statement elements can contain multiple children.
 
 - Expressions placed between curly braces in element attribute values are
 evaluated during parsing, and their result values are used for setting prop
-values. Or in the case of the `<do>` loop `on` attribute, for optionally setting
-a source array for the values.
+values. Or in the case of the optional `on` attribute in `<do>` loop elements,
+the result value must be an array for providing values during iteration.
 
 - Custom component tags are supported by including a map of tag names to
 component classes in the renderer options object
 
-- Input text can be optionally evaluated before rendering, useful for parsing
+- Input HTML can be optionally evaluated before rendering, useful for parsing
 external templates while keeping all functionality.
 
 - A single, top level, enclosing HTML element is optional.
