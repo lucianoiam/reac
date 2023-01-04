@@ -21,12 +21,10 @@
 class Renderer {
 
     constructor(options) {
-        if (!options || !options.react) {
-            throw new Error('React library must be specified');
-        }
-
-        this._options = options;
-        this._options.callContext = this._options.callContext || null;
+        this._options = {};
+        this._options.react = options.react || React;
+        this._options.callContext = options.callContext || null;
+        this._options.evaluateInput = options.evaluateInput || false;
 
         this._options.childComponents = options.childComponents ?
              Object.fromEntries(Object.entries(options.childComponents)
@@ -36,8 +34,13 @@ class Renderer {
     }
 
     render(html) {
+        if (this._options.evaluateInput) {
+            const js = 'return `' + html + '`';
+            html = Function(js).bind(this._options.callContext).call();
+        }
+
         const doc = (new DOMParser).parseFromString(html, 'text/html');
-        return this._renderHTMLCollection(doc.body.children);
+        return this._renderHTMLCollection(doc.body.children); 
     }
 
     _renderHTMLCollection(collection) {
