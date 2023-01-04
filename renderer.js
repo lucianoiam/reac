@@ -1,5 +1,5 @@
 /*
- * react-nojsx - Utilities for using React/Preact without JSX
+ * Reactant - Utilities for using React/Preact without JSX
  * Copyright (C) 2023 Luciano Iam <oss@lucianoiam.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -183,7 +183,7 @@ Renderer.attributeToPropMap = {
     'oninput'  : 'onInput',
 };
 
-window.ReactNoJSX = window.ReactNoJSX || {};
-window.ReactNoJSX.Renderer = Renderer;
+window.Reactant = window.Reactant || {};
+window.Reactant.Renderer = Renderer;
 
 })();

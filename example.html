@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>react-nojsx</title>
+    <title>Reactant</title>
   </head>
   <body>
     <div id="root"></div>
@@ -21,7 +21,7 @@
 
     <script>
 
-    class ChildComponent extends ReactNoJSX.Component {
+    class ChildComponent extends Reactant.Component {
 
         renderHTML() {
             return `
@@ -41,7 +41,7 @@
     ChildComponent.fruits = ['apple', 'orange', 'banana', 'mango', 'kiwi'];
 
 
-    class ParentComponent extends ReactNoJSX.Component {
+    class ParentComponent extends Reactant.Component {
 
         constructor(props) {
             super(props, { ChildComponent });

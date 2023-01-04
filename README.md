@@ -1,25 +1,25 @@
-react-nojsx
------------
+Reactant
+--------
 
-*Utilities for using React without JSX*
+*React And No Transpiler*
 
-This project is more of a hack and learning tool than a general solution for
-using React without JSX. It only covers a few simple cases useful for my own
-projects. Contributions are welcome.
+This project provides some utilities for using React without JSX. It is more of
+a hack and learning tool than a general solution for using React without JSX. It
+only covers a few simple cases useful for my own projects.
 
 What is included
 ----------------
 
 | File | Contents
 |------|---------
-| [renderer.js](https://github.com/lucianoiam/react-nojsx/blob/master/renderer.js) | Class for converting HTML text into a `React.Element` tree
-| [component.js](https://github.com/lucianoiam/react-nojsx/blob/master/component.js) | Optional `React.Component` subclass for convenience
+| [renderer.js](https://github.com/lucianoiam/reactant/blob/master/renderer.js) | Class for converting HTML text into a `React.Element` tree
+| [component.js](https://github.com/lucianoiam/reactant/blob/master/component.js) | Optional `React.Component` subclass for convenience
 
 Interface
 ---------
 
 ```js
-const reactElements = new ReactNoJSX.Renderer({
+const reactElements = new Reactant.Renderer({
     react           : React|preact,         // default React
     childComponents : {tagname:component},  // default {}
     callContext     : argument-for-bind,    // default null (global context)
@@ -78,12 +78,12 @@ external templates while keeping all functionality.
 
 - A single, top level, enclosing HTML element is optional.
 
-See [example.html](https://github.com/lucianoiam/react-nojsx/blob/master/example.html)
+See [example.html](https://github.com/lucianoiam/reactant/blob/master/example.html)
 for more details
 
 Credits
 -------
 
-react-nojsx was inspired on [html-react-parser](https://github.com/remarkablemark/html-react-parser)
+reactant was inspired on [html-react-parser](https://github.com/remarkablemark/html-react-parser)
 and [LemonadeJS](https://github.com/lemonadejs/lemonadejs). It is also
 compatible with [Preact](https://preactjs.com).
