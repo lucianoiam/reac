@@ -96,12 +96,13 @@ class Renderer {
         } else if (attrs.if == 'true') {
             return this._renderHTMLCollection(el.children);
 
-        } else if (! isNaN(attrs.to)) {
-            const to = parseFloat(attrs.to),
+        } else if (attrs.on || attrs.to) {
+            const on = this._evaluate(attrs.on, null),
+                  to = (attrs.to && !isNaN(attrs.to)) ? parseFloat(attrs.to)
+                                                        : on.length,
                   from = parseFloat(attrs.from || '0'),
                   index = attrs.index || 'i',
-                  value = attrs.value || 'val',
-                  on = this._evaluate(attrs.on, null);
+                  value = attrs.value || 'val';
 
             let rels = [];
             this._tokens = {};
@@ -117,7 +118,7 @@ class Renderer {
             }
 
             return rels;
-            
+
         } else {
             throw new Error('Malformed statement ' + el.cloneNode(false).outerHTML);
         }
