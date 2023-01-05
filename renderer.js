@@ -96,18 +96,18 @@ class Renderer {
         } else if (attrs.if == 'true') {
             return this._renderHTMLCollection(el.children);
 
-        } else if (attrs.iterate || attrs.to) {
+        } else if (attrs.iterate || attrs.count) {
             const iterate = this._evaluate(attrs.iterate, null),
-                  to = (attrs.to && !isNaN(attrs.to)) ? parseFloat(attrs.to)
-                                                        : iterate.length,
-                  from = parseFloat(attrs.from || '0'),
+                  count = (attrs.count && !isNaN(attrs.count)) ?
+                            parseFloat(attrs.count) : iterate.length,
+                  start = parseFloat(attrs.start || '0'),
                   index = attrs.index || 'i',
                   value = attrs.value || 'val';
 
             let rels = [];
             this._tokens = {};
 
-            for (let i = from; i < to; i++) {
+            for (let i = start; i < count; i++) {
                 this._tokens[index] = String(i);
 
                 if (iterate) {
