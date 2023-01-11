@@ -1,5 +1,5 @@
 /*
- * Reactant - Utilities for using React/Preact without JSX
+ * Reac - Utilities for using React/Preact without JSX
  * Copyright (C) 2023 Luciano Iam <oss@lucianoiam.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -183,7 +183,7 @@ Renderer.attributeToPropMap = {
     'oninput'  : 'onInput',
 };
 
-window.Reactant = window.Reactant || {};
-window.Reactant.Renderer = Renderer;
+window.Reac = window.Reac || {};
+window.Reac.Renderer = Renderer;
 
 })();

@@ -1,5 +1,5 @@
 /*
- * Reactant - Utilities for using React/Preact without JSX
+ * Reac - Utilities for using React/Preact without JSX
  * Copyright (C) 2023 Luciano Iam <oss@lucianoiam.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ class Component extends React.Component {
     constructor(props, childComponents) {
         super(props);
 
-        this._renderer = new Reactant.Renderer({
+        this._renderer = new Reac.Renderer({
             childComponents: childComponents,
             callContext: this
         });
@@ -39,7 +39,7 @@ class Component extends React.Component {
 
 }
 
-window.Reactant = window.Reactant || {};
-window.Reactant.Component = Component;
+window.Reac = window.Reac || {};
+window.Reac.Component = Component;
 
 })();

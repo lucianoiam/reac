@@ -1,7 +1,7 @@
-Reactant
---------
+Reac
+----
 
-*React And No Transpiler*
+*React without Transpiler*
 
 This project provides some utilities for using React without JSX. It is more of
 a hack and learning tool than a general solution for using React without JSX. It
@@ -12,14 +12,14 @@ What is included
 
 | File | Contents
 |------|---------
-| [renderer.js](https://github.com/lucianoiam/reactant/blob/master/renderer.js) | Class for converting HTML text into a `React.Element` tree
-| [component.js](https://github.com/lucianoiam/reactant/blob/master/component.js) | Optional `React.Component` subclass for convenience
+| [renderer.js](https://github.com/lucianoiam/reac/blob/master/renderer.js) | Class for converting HTML text into a `React.Element` tree
+| [component.js](https://github.com/lucianoiam/reac/blob/master/component.js) | Optional `React.Component` subclass for convenience
 
 Interface
 ---------
 
 ```js
-const reactElements = new Reactant.Renderer({
+const reactElements = new Reac.Renderer({
     react           : React|preact,         // default React
     childComponents : {tagname:component},  // default {}
     callContext     : argument-for-bind,    // default null (global context)
@@ -79,12 +79,12 @@ external templates while keeping all functionality.
 
 - A single, top level, enclosing HTML element is optional.
 
-See [example.html](https://github.com/lucianoiam/reactant/blob/master/example.html)
+See [example.html](https://github.com/lucianoiam/reac/blob/master/example.html)
 for more details
 
 Credits
 -------
 
-reactant was inspired on [html-react-parser](https://github.com/remarkablemark/html-react-parser)
+Reac was inspired on [html-react-parser](https://github.com/remarkablemark/html-react-parser)
 and [LemonadeJS](https://github.com/lemonadejs/lemonadejs). It is also
 compatible with [Preact](https://preactjs.com).
