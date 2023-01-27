@@ -48,61 +48,36 @@ class Renderer {
         const rels = [];
 
         for (const el of collection) {
-            rels.push(this._renderHTMLElement(el));
+            rels.push(this._renderHTMLElementWithStatement(el));
         }
 
         return rels;
     }
 
-    _renderHTMLElement(el) {
+    _renderHTMLElementWithStatement(el) {
         let rel;
 
-        if (el.tagName == 'DO') {
-            return this._renderHTMLElementWithStatement(el);
-        } else {
-            const react = this._options.react,
-                  components = this._options.childComponents,
-                  props = this._renderHTMLElementProps(el),
-                  children = this._renderHTMLCollection(el.children);
-
-            if (el.tagName in components) {
-                rel = react.createElement(components[el.tagName], props, children);
-            } else {
-                if (children.length > 0) {
-                    rel = react.createElement(el.tagName, props, children);
-                } else {
-                    props.dangerouslySetInnerHTML = {
-                        __html: this._replaceTokens(el.innerHTML)
-                    };
-
-                    rel = react.createElement(el.tagName, props);
-                }
-            }
-        }
-
-        return rel;
-    }
-
-    _renderHTMLElementWithStatement(el) {
-        let attrs = {};
+        const nonRendering = el.tagName == 'DO',
+              attrs = {};
 
         for (const attr of el.attributes) {
             attrs[attr.nodeName] = attr.nodeValue;
         }
 
-        if (attrs.if == 'false') {
-            return null;
+        if (attrs['@if'] == 'false') {
+            rel = null;
 
-        } else if (attrs.if == 'true') {
-            return this._renderHTMLCollection(el.children);
+        } else if (attrs['@if'] == 'true') {
+            rel = nonRendering ? this._renderHTMLCollection(el.children)
+                               : this._renderHTMLElement(el, null);
 
-        } else if (attrs.iterate || attrs.count) {
-            const iterate = this._evaluate(attrs.iterate, null),
-                  count = (attrs.count && !isNaN(attrs.count)) ?
-                            parseFloat(attrs.count) : iterate.length,
-                  start = parseFloat(attrs.start || '0'),
-                  index = attrs.index || 'i',
-                  value = attrs.value || 'val';
+        } else if (attrs['@loop'] || attrs['@count']) {
+            const loop  = this._evaluate(attrs['@loop'] , null),
+                  count = (attrs['@count'] && !isNaN(attrs['@count'])) ?
+                            parseFloat(attrs['@count']) : loop.length,
+                  start = parseFloat(attrs['@start'] || '0'),
+                  index = attrs['@index'] || 'i',
+                  value = attrs['@value'] || 'val';
 
             let rels = [];
             this._tokens = {};
@@ -110,28 +85,65 @@ class Renderer {
             for (let i = start; i < count; i++) {
                 this._tokens[index] = String(i);
 
-                if (iterate) {
-                    this._tokens[value] = iterate[i];
+                if (loop) {
+                    this._tokens[value] = loop[i];
                 }
 
                 rels = rels.concat(this._renderHTMLCollection(el.children));
             }
 
-            return rels;
-
+            rel = nonRendering ? rels : this._renderHTMLElement(el, rels);
+        
         } else {
-            throw new Error('Malformed statement ' + el.cloneNode(false).outerHTML);
+            rel = this._renderHTMLElement(el, null);
         }
+
+        return rel;
+    }
+
+    _renderHTMLElement(el, children) {
+        const react = this._options.react,
+              components = this._options.childComponents,
+              recursive = children === null,
+              props = this._renderHTMLElementProps(el);
+
+        let rel;
+
+        if (recursive) {
+            children = this._renderHTMLCollection(el.children);
+        }
+
+        if (el.tagName in components) {
+            rel = react.createElement(components[el.tagName], props, children);
+        } else {
+            if (children.length > 0) {
+                rel = react.createElement(el.tagName, props, children);
+            } else {
+                if (recursive) {
+                    props.dangerouslySetInnerHTML = {
+                        __html: this._replaceTokens(el.innerHTML)
+                    };
+                }
+
+                rel = react.createElement(el.tagName, props);
+            }
+        }
+
+        return rel;
     }
 
     _renderHTMLElementProps(el) {
-        const attrToProp = this.constructor.attributeToPropMap,
+        const This = this.constructor,
               props = {};
 
         for (const attr of el.attributes) {
+            if (This.statementArguments.indexOf(attr.nodeName) != -1) {
+                continue;
+            }
+
             const locaseName = attr.nodeName.toLowerCase(),
-                  name = locaseName in attrToProp ? attrToProp[locaseName]
-                                                    : attr.nodeName,
+                  name = locaseName in This.attributeToPropMap ?
+                            This.attributeToPropMap[locaseName] : attr.nodeName,
                   value = this._replaceTokens(attr.nodeValue);
 
             if (name == 'style') {
@@ -175,6 +187,10 @@ class Renderer {
     }
 
 }
+
+Renderer.statementArguments = [
+    '@if', '@loop', '@count', '@start', '@index', '@value'
+];
 
 // TODO : this is very incomplete
 Renderer.attributeToPropMap = {

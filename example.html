@@ -23,22 +23,18 @@
 
     class ChildComponent extends Reac.Component {
 
+        FRUITS = ['apple', 'orange', 'banana', 'mango', 'kiwi'];
+
         renderHTML() {
             return `
-                <do if="${this.props.count > 0}">
-                <h3>Items</h3>
-                </do>
-                <ul>
-                    <do iterate="{ChildComponent.fruits}" count="${this.props.count}">
+                <h3 @if="${this.props.count > 0}">Items</h3>
+                <ul @loop="{this.FRUITS}" @count="${this.props.count}">
                     <li data-index="{i}">Item {i} - {val}</li>
-                    </do>
                 </ul>
             `;
         }
 
     }
-            
-    ChildComponent.fruits = ['apple', 'orange', 'banana', 'mango', 'kiwi'];
 
 
     class ParentComponent extends Reac.Component {
@@ -54,7 +50,7 @@
                     <textarea
                         placeholder="Type something"
                         onInput="{ ev => this.setState(ps => ({ ...ps, text: ev.target.value })) }"></textarea>
-                    <span>${this.state.text}</span>
+                    <pre>${this.state.text || ' '}</pre>
                 </div>
                 <div>
                     <button onClick="{this.incrementCount}">Click to add item</button>
