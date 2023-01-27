@@ -137,7 +137,7 @@ class Renderer {
               props = {};
 
         for (const attr of el.attributes) {
-            if (This.statementArguments.indexOf(attr.nodeName) != -1) {
+            if (This.statementAttributes.indexOf(attr.nodeName) != -1) {
                 continue;
             }
 
@@ -188,7 +188,7 @@ class Renderer {
 
 }
 
-Renderer.statementArguments = [
+Renderer.statementAttributes = [
     '@if', '@loop', '@count', '@start', '@index', '@value'
 ];
 
