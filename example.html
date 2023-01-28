@@ -28,7 +28,7 @@
         renderHTML() {
             return `
                 <h3 @if="${this.props.count > 0}">Items</h3>
-                <ul @loop="{this.FRUITS}" @count="${this.props.count}">
+                <ul @loop="{this.FRUITS.slice(0, this.props.count)}">
                     <li data-index="{i}">Item {i} - {val}</li>
                 </ul>
             `;

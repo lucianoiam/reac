@@ -25,10 +25,14 @@ const reactElements = new Reac.Renderer({
     evaluateInput   : true|false            // default false
 }).render(`
     <div>
-        
-        <div @if="true|false">Conditional child</div>
 
-        <ul @loop="{expression}" @start="0" @count="10" @index="i" @value="val">
+        <!-- Embedded statement attributes -->
+        
+        <div @if="true|false">
+            Conditional child
+        </div>
+
+        <ul @loop="{expression}">
             <li>The value at index {i} is {val}</li>
         </ul>
 
@@ -38,7 +42,6 @@ const reactElements = new Reac.Renderer({
 
         ${expression}
 
-
         <!-- Alternate version with non-rendering tag <do> -->
 
         <do @if="true|false">
@@ -46,20 +49,22 @@ const reactElements = new Reac.Renderer({
         </do>
 
         <ul>
-            <do @loop="{expression}" @start="0" @count="10" @index="i" @value="val">
+            <do @loop="{expression}">
                 <li>The value at index {i} is {val}</li>
             </do>
         </ul>
+
+        ${expression}
 
     </div>
 `);
 ```
 
-- The parser input is a valid HTML string, no special tokens needed. Therefore 
-template literals are enough for interleaving dynamic data.
+- The parser input is a valid HTML string, no special tokens are needed.
+Therefore template literals are enough for interleaving dynamic data.
 
-- Statements are defined by attributes, `@if` for conditional rendering and
-`@loop` for iterating arrays.
+- Statements and their arguments are defined by attributes. Statement attribute
+`@if` implements conditional rendering and `@loop` array iteration.
 
 - Only one statement attribute can be present in a given element.
 
@@ -69,18 +74,14 @@ statements without polluting rendering tags.
 - Expressions placed between curly braces in attribute values are evaluated
 during parsing, and their result values used for setting prop values.
 
-- Conditional rendering is controlled by attribute `@if` and its possible values
-are the strings `true` and `false`.
+- Possible values for `@if` are the strings `true` and `false`.
 
-- Array iteration is implemented by the presence of attributes `@loop`, `@count`
-or both. The attributes `@start`, `@index` and `@value` are optional. The return
-value of the expression in the `@loop` attribute must be the array that provides
-values during iteration. The current index and value can be accessed from any
-text content or attribute value of any descendant, via tokens with names defined
-in `@index` and `@value`. The default tokens are `{i}` and `{val}` respectively.
-The default starting index `@from` is 0. If `@loop` is specified and `@count` is
-not specified, then the last index is array length-1. If `@count` is specified
-and `@loop` is not specified, only the loop indexes are available.
+- Array iteration is implemented with statement attribute `@loop`. Argument
+attributes `@index` and `@value` are optional. The return value of the `@loop`
+expression must be the array that provides values during iteration. The current
+index and value are accesssible from any text content or attribute value of any
+descendant, via tokens with names defined in `@index` and `@value`. The default
+tokens are `i` and `val` respectively.
 
 - Custom component tags are supported by including a map of tag names to
 component classes in the renderer options object

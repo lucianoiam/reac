@@ -71,18 +71,15 @@ class Renderer {
             rel = nonRendering ? this._renderHTMLCollection(el.children)
                                : this._renderHTMLElement(el, null);
 
-        } else if (attrs['@loop'] || attrs['@count']) {
+        } else if (attrs['@loop']) {
             const loop  = this._evaluate(attrs['@loop'] , null),
-                  count = (attrs['@count'] && !isNaN(attrs['@count'])) ?
-                            parseFloat(attrs['@count']) : loop.length,
-                  start = parseFloat(attrs['@start'] || '0'),
                   index = attrs['@index'] || 'i',
                   value = attrs['@value'] || 'val';
 
             let rels = [];
             this._tokens = {};
 
-            for (let i = start; i < count; i++) {
+            for (let i = 0; i < loop.length; i++) {
                 this._tokens[index] = String(i);
 
                 if (loop) {
@@ -189,7 +186,7 @@ class Renderer {
 }
 
 Renderer.statementAttributes = [
-    '@if', '@loop', '@count', '@start', '@index', '@value'
+    '@if', '@loop', '@index', '@value'
 ];
 
 // TODO : this is very incomplete
