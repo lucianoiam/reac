@@ -76,12 +76,11 @@ during parsing, and their result values used for setting prop values.
 
 - Possible values for `@if` are the strings `true` and `false`.
 
-- Array iteration is implemented with statement attribute `@loop`. Argument
-attributes `@index` and `@value` are optional. The return value of the `@loop`
-expression must be the array that provides values during iteration. The current
-index and value are accesssible from any text content or attribute value of any
-descendant, via tokens with names defined in `@index` and `@value`. The default
-tokens are `i` and `val` respectively.
+- The return value of the `@loop` expression must be the array to be iterated.
+The current iteration index and value are accesssible from any text content or
+attribute value of any descendant, via tokens with names defined in optional
+argument attributes `@index` and `@value`. The default tokens are `i` and `val`
+respectively.
 
 - Custom component tags are supported by including a map of tag names to
 component classes in the renderer options object
