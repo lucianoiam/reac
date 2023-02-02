@@ -26,33 +26,19 @@ const reactElements = new Reac.Renderer({
 }).render(`
     <div>
 
-        <!-- Embedded statement attributes -->
-        
         <div @if="true|false">
-            Conditional child
+            Conditional element
         </div>
 
         <ul @loop="{expression}">
-            <li>The value at index {i} is {val}</li>
+            <li data-index="{i}">
+                The value at index {i} is {val}
+            </li>
         </ul>
 
         <button onClick="{expression}"></button>
 
         <ChildComponent someProp="{expression}"></ChildComponent>
-
-        ${expression}
-
-        <!-- Alternate version with non-rendering tag <do> -->
-
-        <do @if="true|false">
-            <div>Conditional child</div>
-        </do>
-
-        <ul>
-            <do @loop="{expression}">
-                <li>The value at index {i} is {val}</li>
-            </do>
-        </ul>
 
         ${expression}
 
@@ -68,9 +54,6 @@ Therefore template literals are enough for interleaving dynamic data.
 
 - Only one statement attribute can be present in a given element.
 
-- The reserved `<do>` element is non-rendering and its purpose is to define
-statements without polluting rendering tags. 
-
 - Expressions placed between curly braces in attribute values are evaluated
 during parsing, and their result values used for setting prop values.
 
@@ -82,13 +65,16 @@ attribute value of any descendant, via tokens with names defined in optional
 argument attributes `@index` and `@value`. The default tokens are `i` and `val`
 respectively.
 
+- There is a special non-rendering `<do>` element whose purpose is to define
+statements without polluting rendering tags. 
+
 - Custom component tags are supported by including a map of tag names to
 component classes in the renderer options object
 
 - Input HTML can be optionally evaluated before rendering, useful for parsing
 external templates while keeping all functionality.
 
-- A single, top level, enclosing HTML element is optional.
+- A single, top level, enclosing HTML element is not required.
 
 See [example.html](https://github.com/lucianoiam/reac/blob/master/example.html)
 for more details
